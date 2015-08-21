@@ -1,0 +1,39 @@
+doctype html
+html
+    head
+        meta(charset='utf-8')
+        title Form
+        meta(name='description' content='')
+        meta(name='viewport' content='width=device-width, initial-scale=1')
+        link(rel='stylesheet' href='styles/reset.css')
+        link(rel='stylesheet' href='styles/main.css')
+        script(src='../bower_components/jquery/dist/jquery.js')
+        script(src='scripts/main.js')
+    body
+        .left-column
+            .overlay
+                h2 Заполните поля формы
+                form
+                    input#in-name(type="text", placeholder="ФИО")
+                    input#in-faculty(type="text", placeholder="Факультет")
+                    input#in-course(type="text", placeholder="Курс")
+                    textarea#in-statement(placeholder="Заявление")
+                    input#in-date(type="text", placeholder="Дата")
+                    input(type="button", value="Сохранить")
+
+        .right-column
+            .overlay.document
+                .appeal
+                    p.
+                        Ректору ТвГУ <br/>
+                        Белоцерковскому А.В. <br/>
+                        студента(ки) <strong id="out-course"></strong> курса <br/>
+                        <strong id="out-faculty"></strong> факультета <br/>
+                        <strong id="out-name"></strong>
+
+                .statement
+                    h2 Заявление
+                    p#out-statement
+
+                .date
+                    date#out-date

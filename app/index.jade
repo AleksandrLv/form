@@ -10,6 +10,7 @@ html
         script(src='../bower_components/jquery/dist/jquery.js')
         script(src='../bower_components/underscore/underscore-min.js')
         script(src='../bower_components/backbone/backbone-min.js')
+        script(src='../bower_components/backbone-localstorage/backbone-localstorage.js')
         script(src='scripts/main.js')
     body
         .left-column
@@ -17,11 +18,16 @@ html
                 h2 Заполните поля формы
                 form
                     input#in-name(type="text", placeholder="ФИО")
+                    .help-inline
                     input#in-faculty(type="text", placeholder="Факультет")
+                    .help-inline
                     input#in-course(type="text", placeholder="Курс")
+                    .help-inline
                     textarea#in-statement(placeholder="Заявление")
+                    .help-inline
                     input#in-date(type="text", placeholder="Дата")
-                    input(type="button", value="Сохранить")
+                    .help-inline
+                    input#save(type="button", value="Сохранить")
 
         .right-column
             .overlay.document

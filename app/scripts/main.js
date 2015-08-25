@@ -17,7 +17,35 @@ $(function () {
         },
 
         validate: function (attrs, options) {
-            console.log(attrs);
+            var errors = [];
+            if (!this.checkRusText(attrs.name)) {
+                errors.push({field: 'name', message: 'Только русские буквы.'});
+            }
+            if (!this.checkRusText(attrs.faculty)) {
+                errors.push({field: 'faculty', message: 'Только русские буквы.'});
+            }
+            if (!this.checkCourse(attrs.course)) {
+                errors.push({field: 'course', message: 'Цифра от 1 до 6.'});
+            }
+            if (!this.checkDate(attrs.date)) {
+                errors.push({field: 'date', message: 'Дата введена неверно. Введите дату в формате ДД.ММ.ГГГГ'});
+            }
+            return errors.length > 0 ? errors : false;
+        },
+
+        checkRusText: function(text) {
+            var re = /^[а-яА-Я]+$/;
+            return re.test(text);
+        },
+
+        checkCourse: function(number) {
+            var re = /^[1-6]$/;
+            return re.test(number);
+        },
+
+        checkDate: function(date) {
+            var re = /(0[1-9]|1[0-9]|2[0-9]|3[01]).(0[1-9]|1[012]).[0-9]{4}$/;
+            return re.test(date);
         }
     });
 })();
@@ -38,18 +66,19 @@ $(function () {
         },
 
         render: function () {
+            console.log('render');
             this.fields.name.html(this.model.get('name'));
             this.fields.faculty.html(this.model.get('faculty'));
             this.fields.course.html(this.model.get('course'));
             this.fields.statement.html(this.model.get('statement'));
             this.fields.date.html(this.model.get('date'));
+            return this;
         },
 
         updateDocument: function () {
-            var self = this;
             _.each(this.model.changedAttributes(),function(value,key){
-                self.fields[key].html(value);
-            });
+                this.fields[key].html(value);
+            },this);
         }
     });
 })(jQuery);
@@ -60,9 +89,24 @@ $(function () {
 
         el: 'form',
 
+        initialize: function() {
+            this.fields = {
+                'name' : this.$("#in-name"),
+                'faculty' : this.$("#in-faculty"),
+                'course' : this.$("#in-course"),
+                'statement' : this.$("#in-statement"),
+                'date' : this.$("#in-date")
+            };
+
+            this.listenTo(this.model, 'invalid', this.showErrors);
+
+//            this.model.on('invalid', this.showErrors);
+        },
+
         events: {
-            "change textarea": "edit",
-            "change input": "edit"
+//            "change textarea": "edit",
+//            "change input": "edit",
+            "click #save": "saveData"
         },
 
         edit: function (e) {
@@ -70,7 +114,32 @@ $(function () {
             var fieldModel = e.target.id.split('-')[1];
             var obj = {};
             obj[fieldModel] = value;
-            this.model.set(obj, {validate:true});
+//            this.hideErrors();
+            this.model.set(obj, {validate:true, field:fieldModel});
+        },
+
+        saveData: function() {
+            this.hideErrors();
+            var obj = {};
+            _.each(this.fields,function($input,field){
+                obj[field] = $input.val();
+            });
+//            this.model.set(obj,{validate:true});
+            this.model.save(obj);
+        },
+
+        showErrors: function(model, errors) {
+            _.each(errors, function (error) {
+                var inputField = this.fields[error.field];
+                inputField.addClass('error');
+                inputField.next('.help-inline').text(error.message);
+            }, this);
+        },
+
+        hideErrors: function () {
+            this.$('input').removeClass('error');
+            this.$('textarea').removeClass('error');
+            this.$('.help-inline').text('');
         }
     });
 })(jQuery);

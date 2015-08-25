@@ -49,6 +49,24 @@ form {
     height: 130px;
     resize: none;
   }
+
+  .help-inline {
+    display: none;
+    color: red;
+    margin-top: -20px;
+    margin-bottom: 6px;
+    font-size: 14px;
+  }
+
+  .error {
+    border: 1px solid #FF0000;
+    background-color: #F9D5D2;
+    outline: none;
+  }
+
+  .error + .help-inline {
+    display: block;
+  }
 }
 
 .document {

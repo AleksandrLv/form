@@ -1,19 +1,34 @@
-(function ($) {
-    var StatementView = Backbone.View.extend({
+var app = app || {};
+
+(function () {
+    app.StatementView = Backbone.View.extend({
         el: '.document',
 
-        initialize: function() {
-            this.$name = this.$("#out-name");
-            this.$faculty = this.$("#out-faculty");
-            this.$course = this.$("#out-course");
-            this.$statement = this.$("#out-statement");
-            this.$date = this.$("#out-date");
-
-            this.listenTo(st, 'change:name', this.render);
+        initialize: function () {
+            this.fields = {
+                'name' : this.$("#out-name"),
+                'faculty' : this.$("#out-faculty"),
+                'course' : this.$("#out-course"),
+                'statement' : this.$("#out-statement"),
+                'date' : this.$("#out-date")
+            };
+            this.listenTo(this.model, 'change', this.updateDocument);
+            this.render();
         },
 
-        render: function() {
-            this.$name.html(st.get('name'));
+        render: function () {
+            this.fields.name.html(this.model.get('name'));
+            this.fields.faculty.html(this.model.get('faculty'));
+            this.fields.course.html(this.model.get('course'));
+            this.fields.statement.html(this.model.get('statement'));
+            this.fields.date.html(this.model.get('date'));
+            return this;
+        },
+
+        updateDocument: function () {
+            _.each(this.model.changedAttributes(),function(value,key){
+                this.fields[key].html(value);
+            },this);
         }
     });
-})(jQuery);
+})();

@@ -1,7 +1,8 @@
 body {
-  background: #fafafa;
+  background: #e2e2e2;
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   color: #333;
+  min-width: 480px;
 }
 
 h2 {
@@ -11,12 +12,13 @@ h2 {
 }
 
 .left-column {
-  width: 50%;
+  width: 40%;
   display: inline-block;
 }
 
 .right-column {
-  @extend .left-column;
+  width: 60%;
+  display: inline-block;
   margin-left: -5px;
   vertical-align: top;
 
@@ -32,6 +34,8 @@ h2 {
 }
 
 form {
+  max-width: 600px;
+  display: inline-block;
   input {
     width: 100%;
     height: 35px;
@@ -115,7 +119,7 @@ form {
   #out-statement {
     @extend strong;
     width: 100%;
-    height: 110px;
+    min-height: 110px;
   }
 
   #out-date {
@@ -133,5 +137,11 @@ form {
     @extend .appeal;
     text-align: right;
     margin-top: 30px;
+  }
+}
+
+@media (max-width: 900px) {
+  .left-column, .right-column {
+    width: 100%;
   }
 }

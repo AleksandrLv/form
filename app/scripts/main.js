@@ -6,6 +6,8 @@ $(function () {
     new app.StatementView({model:statement});
 });
 
+
+
 (function () {
     app.Statement = Backbone.Model.extend({
         defaults: {
@@ -16,13 +18,18 @@ $(function () {
             date: ""
         },
 
+        initialize: function() {
+            var attrs = JSON.parse(localStorage.getItem('statement'));
+            this.set(attrs);
+        },
+
         validate: function (attrs, options) {
             var errors = [];
             if (!this.checkRusText(attrs.name)) {
-                errors.push({field: 'name', message: 'Только русские буквы.'});
+                errors.push({field: 'name', message: 'Имя русскими буквами в родительном падеже.'});
             }
             if (!this.checkRusText(attrs.faculty)) {
-                errors.push({field: 'faculty', message: 'Только русские буквы.'});
+                errors.push({field: 'faculty', message: 'Факультет русскими буквами в родительном падеже.'});
             }
             if (!this.checkCourse(attrs.course)) {
                 errors.push({field: 'course', message: 'Цифра от 1 до 6.'});
@@ -34,7 +41,7 @@ $(function () {
         },
 
         checkRusText: function(text) {
-            var re = /^[а-яА-Я]+$/;
+            var re = /^[а-яА-Я ]+$/;
             return re.test(text);
         },
 
@@ -50,7 +57,7 @@ $(function () {
     });
 })();
 
-(function ($) {
+(function () {
     app.StatementView = Backbone.View.extend({
         el: '.document',
 
@@ -63,10 +70,10 @@ $(function () {
                 'date' : this.$("#out-date")
             };
             this.listenTo(this.model, 'change', this.updateDocument);
+            this.render();
         },
 
         render: function () {
-            console.log('render');
             this.fields.name.html(this.model.get('name'));
             this.fields.faculty.html(this.model.get('faculty'));
             this.fields.course.html(this.model.get('course'));
@@ -81,9 +88,9 @@ $(function () {
             },this);
         }
     });
-})(jQuery);
+})();
 
-(function ($) {
+(function () {
     app.FormView = Backbone.View.extend({
         tagName: 'form',
 
@@ -97,10 +104,9 @@ $(function () {
                 'statement' : this.$("#in-statement"),
                 'date' : this.$("#in-date")
             };
-
             this.listenTo(this.model, 'invalid', this.showErrors);
-
-//            this.model.on('invalid', this.showErrors);
+            this.listenTo(this.model, 'change', this.saveLocalStorage);
+            this.render();
         },
 
         events: {
@@ -109,12 +115,17 @@ $(function () {
             "click #save": "saveData"
         },
 
+        render: function() {
+            _.each(this.fields,function($input,field){
+                $input.val(this.model.attributes[field]);
+            },this);
+        },
+
         edit: function (e) {
             var value = e.target.value.trim();
             var fieldModel = e.target.id.split('-')[1];
             var obj = {};
             obj[fieldModel] = value;
-//            this.hideErrors();
             this.model.set(obj, {validate:true, field:fieldModel});
         },
 
@@ -124,8 +135,13 @@ $(function () {
             _.each(this.fields,function($input,field){
                 obj[field] = $input.val();
             });
-//            this.model.set(obj,{validate:true});
-            this.model.save(obj);
+
+            this.model.set(obj, {validate:true});
+//            this.model.save(obj);
+        },
+
+        saveLocalStorage: function() {
+             localStorage.setItem('statement',JSON.stringify(this.model.attributes));
         },
 
         showErrors: function(model, errors) {
@@ -142,4 +158,4 @@ $(function () {
             this.$('.help-inline').text('');
         }
     });
-})(jQuery);
+})();

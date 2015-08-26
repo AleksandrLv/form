@@ -10,14 +10,13 @@ html
         script(src='../bower_components/jquery/dist/jquery.js')
         script(src='../bower_components/underscore/underscore-min.js')
         script(src='../bower_components/backbone/backbone-min.js')
-        script(src='../bower_components/backbone-localstorage/backbone-localstorage.js')
         script(src='scripts/main.js')
     body
         .left-column
             .overlay
                 h2 Заполните поля формы
                 form
-                    input#in-name(type="text", placeholder="ФИО")
+                    input#in-name(type="text", placeholder="ФИО в родительном падеже")
                     .help-inline
                     input#in-faculty(type="text", placeholder="Факультет")
                     .help-inline

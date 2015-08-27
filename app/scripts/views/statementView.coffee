@@ -11,7 +11,6 @@ do ->
         'course': this.$("#out-course")
         'statement': this.$("#out-statement")
         'date': this.$("#out-date")
-      console.log "stView"
 
       this.listenTo this.model, 'change', this.updateDocument
       this.render()

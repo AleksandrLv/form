@@ -13,7 +13,7 @@ do ->
         'course': this.$("#in-course")
         'statement': this.$("#in-statement")
         'date': this.$("#in-date")
-      console.log "fv"
+
       this.listenTo this.model, 'invalid', this.showErrors
       this.listenTo this.model, 'change', this.saveLocalStorage
       this.render()
